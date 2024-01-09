@@ -5,10 +5,10 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: tutoseu
-      MYSQL_DATABASE: tutoseu
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: monpassword
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: OGPT
+      MYSQL_USER: OGPT
+      MYSQL_PASSWORD: JadoreOGE
     ports:
     - 3306:3306
 
@@ -20,5 +20,5 @@ services:
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: db
-      PMA_USER: myuser
-      PMA_PASSWORD: monpassword
+      PMA_USER: OGPT
+      PMA_PASSWORD: JadoreOGE

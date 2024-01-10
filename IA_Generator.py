@@ -12,7 +12,7 @@ def moyenne (test_size, random_state):
     if test_size == 1.0 :
         return
     
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv('data_moyenne.csv')
 
     X = df[['BDD', 'Systeme', 'IA']]
     y = df['Admis']
@@ -32,10 +32,11 @@ def TroisA (test_size, random_state):
     if test_size == 1.0 :
         return
     
-    df = pd.read_csv('data3.csv')
+    df = pd.read_csv('dataB2.csv')
 
     X = df[['Admis', 'noteStage', 'nbEntreprise','nbEntretiens']]
     y = df['trouve']
+
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
 
@@ -45,14 +46,14 @@ def TroisA (test_size, random_state):
     y_pred = regressor.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     print(accuracy)
-    with open('3A.pkl', 'wb') as f:
+    with open('B2.pkl', 'wb') as f:
         pickle.dump(regressor, f)
 
 def DeuxA (test_size, random_state):
     if test_size == 1.0 :
         return
     
-    df = pd.read_csv('data2.csv')
+    df = pd.read_csv('dataB1.csv')
 
     X = df[['Admis', 'nbEntreprise','nbEntretiens']]
     y = df['trouve']
@@ -65,9 +66,9 @@ def DeuxA (test_size, random_state):
     y_pred = regressor.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     print(accuracy)
-    with open('2A.pkl', 'wb') as f:
+    with open('B1.pkl', 'wb') as f:
         pickle.dump(regressor, f)
 
-moyenne(0.3,0)
-TroisA(0.5,0)
-DeuxA(0.5,0)
+moyenne(0.6,0)
+TroisA(0.6,0)
+DeuxA(0.6,0)

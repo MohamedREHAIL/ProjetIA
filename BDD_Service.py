@@ -1,4 +1,14 @@
 import mysql.connector
+import hashlib
+
+def hash(query):
+    hasher = hashlib.sha256()
+
+    hasher.update(query.encode('utf-8'))
+
+    hash_output = hasher.hexdigest()
+
+    return hash_output
 
 class DatabaseConnection:
     def __init__(self, host_name, user_name, user_password, db_name):
@@ -10,11 +20,18 @@ class DatabaseConnection:
         )
         self.cursor = self.connection.cursor()
 
-    def execute_query(self, query):
+    def auth(self, username, password):
         try:
-            self.cursor.execute(query)
-            self.connection.commit()
-            print("Query executed successfully")
+            hashPassword = hash(password)
+            values= (username, hashPassword)
+            self.cursor.execute("Select * from user where username=%s and password=%s", values)
+            result = self.connection.fetchall()
+            if len(result) == 1:
+                return result[0]
+            elif len(result) > 1 : 
+                return False
+            else:
+                return False
         except Exception as e:
             print(f"The error '{e}' occurred")
 

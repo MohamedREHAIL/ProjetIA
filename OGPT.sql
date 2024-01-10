@@ -31,6 +31,7 @@ CREATE TABLE `Form` (
   `id` int NOT NULL,
   `userId` int NOT NULL,
   `nbEntreprise` int NOT NULL,
+  `nbReponse` int NOT NULL,
   `nbEntretien` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -71,7 +72,8 @@ CREATE TABLE `User` (
 
 CREATE TABLE `UserList` (
   `id` int NOT NULL,
-  `name` int NOT NULL
+  `name` int NOT NULL,
+  `promo` enum('B1','B2') NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

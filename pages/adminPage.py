@@ -50,7 +50,7 @@ class PageTwo(tk.Toplevel):
         username_entry.pack(pady=5)
 
         tk.Label(popup, text="Mot de passe:").pack(pady=5)
-        mdp_entry = tk.Entry(popup, width=20)
+        mdp_entry = tk.Entry(popup, width=20,show="*")
         mdp_entry.pack(pady=5)
 
 
@@ -131,7 +131,7 @@ class PageTwo(tk.Toplevel):
       
         popup_notes = tk.Toplevel(self)
         popup_notes.title("Ajouter Note")
-        popup_notes.geometry("300x200")
+        popup_notes.geometry("300x300")
 
         
         tk.Label(popup_notes, text="IA:").pack(pady=5)

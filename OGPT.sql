@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : db
--- Généré le : mar. 09 jan. 2024 à 20:34
+-- Généré le : mer. 10 jan. 2024 à 22:28
 -- Version du serveur : 8.2.0
 -- Version de PHP : 8.2.14
 
@@ -47,7 +47,8 @@ CREATE TABLE `Grade` (
   `userId` int NOT NULL,
   `IA` int NOT NULL,
   `Systeme` int NOT NULL,
-  `BDD` int NOT NULL
+  `BDD` int NOT NULL,
+  `Stage` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -64,6 +65,7 @@ CREATE TABLE `User` (
   `username` varchar(10) NOT NULL,
   `password` varchar(200) NOT NULL,
   `UserList_id` int NOT NULL
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -74,8 +76,8 @@ CREATE TABLE `User` (
 
 CREATE TABLE `UserList` (
   `id` int NOT NULL,
---  `name` int NOT NULL,
   `promo` enum('B1','B2') NOT NULL,
+  `name` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

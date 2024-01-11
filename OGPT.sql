@@ -32,7 +32,8 @@ CREATE TABLE `Form` (
   `userId` int NOT NULL,
   `nbEntreprise` int NOT NULL,
   `nbReponse` int NOT NULL,
-  `nbEntretien` int NOT NULL
+  `nbEntretien` int NOT NULL,
+  `validate` BOOLEAN DEFAULT 0,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -58,9 +59,10 @@ CREATE TABLE `Grade` (
 CREATE TABLE `User` (
   `id` int NOT NULL,
   `Type` enum('Admin','Etudiant') NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `FirstName` varchar(100) NOT NULL,
+  `LastName` varchar(100) NOT NULL,
   `username` varchar(10) NOT NULL,
-  `password` varchar(32) NOT NULL,
+  `password` varchar(200) NOT NULL,
   `UserList_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -72,7 +74,7 @@ CREATE TABLE `User` (
 
 CREATE TABLE `UserList` (
   `id` int NOT NULL,
-  `name` int NOT NULL,
+--  `name` int NOT NULL,
   `promo` enum('B1','B2') NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -156,6 +158,10 @@ ALTER TABLE `Grade`
 --
 ALTER TABLE `User`
   ADD CONSTRAINT `User_FK_1` FOREIGN KEY (`UserList_id`) REFERENCES `UserList` (`id`);
+
+
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

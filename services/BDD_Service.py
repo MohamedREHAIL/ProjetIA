@@ -1,5 +1,9 @@
 import mysql.connector
 import hashlib
+from enum import Enum
+import pandas as pd
+
+from services.IA_Service import verify
 
 def hash(query):
     hasher = hashlib.sha256()
@@ -10,7 +14,12 @@ def hash(query):
 
     return hash_output
 
+class Promo(Enum):
+    B1 = "B1"
+    B2 = "B2"
+
 class DatabaseConnection:
+   
     def __init__(self, host_name, user_name, user_password, db_name):
         self.connection = mysql.connector.connect(
             host=host_name,
@@ -34,31 +43,14 @@ class DatabaseConnection:
             print(f"The error '{e}' occurred")
             return None
 
-
-
-    def add_student(self, nom, prenom, promo, username, password):
+    def add_student(self, nom, prenom, username, password, userListId):
         try:
-            
-            select_query = "SELECT id FROM UserList WHERE promo = %s"
-            self.cursor.execute(select_query, (promo,))
-            promo_result = self.cursor.fetchone()
-
-            if promo_result is None:
-                
-                insert_promo_query = "INSERT INTO UserList (promo) VALUES (%s)"
-                self.cursor.execute(insert_promo_query, (promo,))
-                self.connection.commit()
-
-           
-            self.cursor.execute(select_query, (promo,))
-            promo_id = self.cursor.fetchone()[0]
-
             
             hashed_password = hash(password)
 
            
             insert_user_query = "INSERT INTO User (Type, FirstName, LastName, username, password, UserList_id) VALUES (%s, %s, %s, %s, %s, %s)"
-            user_values = ('Etudiant', nom, prenom, username, hashed_password, promo_id)
+            user_values = ('Etudiant', nom, prenom, username, hashed_password, userListId)
             self.cursor.execute(insert_user_query, user_values)
 
            
@@ -85,10 +77,12 @@ class DatabaseConnection:
             
             self.connection.rollback()
             print(f"The following error occurred: {e}")
+            return -1
+        return 0
 
-    def get_all_students(self):
+    def get_all_students(self, userListId):
             try:
-                self.cursor.execute("SELECT U.*, UL.promo FROM User U JOIN UserList UL ON U.UserList_id = UL.id")
+                self.cursor.execute("SELECT U.*, UL.promo FROM User U JOIN UserList UL ON U.UserList_id = UL.id WHERE UL.id = %s", (userListId,))
                 students = self.cursor.fetchall()
 
                 student_dict = {}
@@ -128,12 +122,18 @@ class DatabaseConnection:
             print(f"The error '{e}' occurred")
             return None
         
-    def add_grade_for_student(self, user_id, ia, systeme, bdd):
+    def add_grade_for_student(self, user_id, ia, systeme, bdd, stage):
         try:
-            insert_grade_query = "INSERT INTO Grade (userId, IA, Systeme, BDD) VALUES (%s, %s, %s, %s)"
-            grade_values = (user_id, ia, systeme, bdd)
-            self.cursor.execute(insert_grade_query, grade_values)
-            self.connection.commit()
+            if stage:
+                insert_grade_query = "INSERT INTO Grade (userId, IA, Systeme, BDD, Stage) VALUES (%s, %s, %s, %s, %s)"
+                grade_values = (user_id, ia, systeme, bdd, stage)
+                self.cursor.execute(insert_grade_query, grade_values)
+                self.connection.commit()
+            else:
+                insert_grade_query = "INSERT INTO Grade (userId, IA, Systeme, BDD) VALUES (%s, %s, %s, %s)"
+                grade_values = (user_id, ia, systeme, bdd)
+                self.cursor.execute(insert_grade_query, grade_values)
+                self.connection.commit()
             print("Notes ajoutées avec succès.")
         except Exception as e:
             self.connection.rollback()
@@ -157,6 +157,57 @@ class DatabaseConnection:
         except Exception as e:
             print(f"The error '{e}' occurred")
             return None
+
+    def get_Userlists(self):
+        try:
+            self.cursor.execute("SELECT UL.*, COUNT(U.id) FROM UserList AS UL LEFT JOIN User AS U ON U.UserList_id = UL.id GROUP BY UL.id")
+            userLists = self.cursor.fetchall()
+            userList_dict = {}
+            for userList in userLists:
+                userList_dict[userList[0]] = {
+                    'ID':userList[0],
+                    'Promo': userList[1],
+                    'Name': userList[2],
+                    'NbEtud': userList[3], 
+                }
+            return userList_dict
+        except Exception as e:
+            print(f"The error '{e}' occurred")
+            return {}
+
+    def addUserList(self, name, promo):
+        try: 
+            insert_user_query = "INSERT INTO UserList (name, promo) VALUES (%s, %s)"
+            if promo == Promo.B1:
+                values = (name, "B1")
+            else:
+                values = (name, "B2")
+            self.cursor.execute(insert_user_query, values)
+
+           
+            self.connection.commit()
+
+            print("UserList ajouté avec succès.")
+        except Exception as e:
+            self.connection.rollback()
+            print(f"L'erreur suivante s'est produite : {e}")
+
+    def validate(self, user_id, promo, ia, systeme, bdd, stage, nb_entreprise, nb_reponse, nb_entretien):
+        try:
+            result = verify(ia,bdd,systeme,stage,nb_entreprise, nb_reponse, nb_entretien, promo)
+            insert_user_query = "UPDATE `Form` SET `validate` = %s WHERE userId=%s;"
+            values = (int(result),user_id)
+            self.cursor.execute(insert_user_query, values)
+
+            
+            self.connection.commit()
+            print("UserList ajouté avec succès.")
+        except Exception as e:
+            self.connection.rollback()
+            print(f"L'erreur suivante s'est produite : {e}")
+            print("coucou")
+
+
 
     def close_connection(self):
         self.connection.close()

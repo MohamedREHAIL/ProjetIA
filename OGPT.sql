@@ -33,8 +33,8 @@ CREATE TABLE `Form` (
   `nbEntreprise` int NOT NULL,
   `nbReponse` int NOT NULL,
   `nbEntretien` int NOT NULL,
-  `validate` BOOLEAN DEFAULT 0,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `validate` BOOLEAN DEFAULT 0
+);
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,7 @@ CREATE TABLE `Grade` (
   `Systeme` int NOT NULL,
   `BDD` int NOT NULL,
   `Stage` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ CREATE TABLE `User` (
   `password` varchar(200) NOT NULL,
   `UserList_id` int NOT NULL
 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 -- --------------------------------------------------------
 
@@ -78,7 +78,7 @@ CREATE TABLE `UserList` (
   `id` int NOT NULL,
   `promo` enum('B1','B2') NOT NULL,
   `name` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 --
 -- Index pour les tables déchargées

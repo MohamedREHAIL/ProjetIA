@@ -34,7 +34,7 @@ def TroisA (test_size, random_state):
     
     df = pd.read_csv('dataB2.csv')
 
-    X = df[['Admis', 'noteStage', 'nbEntreprise','nbEntretiens']]
+    X = df[['Admis', 'noteStage', 'nbEntreprise',"nbReponse",'nbEntretiens']]
     y = df['trouve']
 
 
@@ -55,7 +55,7 @@ def DeuxA (test_size, random_state):
     
     df = pd.read_csv('dataB1.csv')
 
-    X = df[['Admis', 'nbEntreprise','nbEntretiens']]
+    X = df[['Admis', 'nbEntreprise',"nbReponse",'nbEntretiens']]
     y = df['trouve']
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
